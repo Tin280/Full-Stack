@@ -1,4 +1,4 @@
-//Finish 2.6-2.10
+//Finish 2.6-2.12
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
@@ -12,11 +12,12 @@ const App = () => {
   const [filterQuery, setfilterQuery] = useState("");
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
+    axios.get("http://localhost:3003/persons").then((response) => {
       console.log("promise fulfilled");
       setPersons(response.data);
     });
   }, []);
+
   const handlechange = (setValue) => (event) => {
     console.log(event.target.value);
     setValue(event.target.value);
@@ -26,16 +27,16 @@ const App = () => {
     event.preventDefault();
     if (persons.find((person) => person.name === newName)) {
       alert(`${newName} is already added to phonebook`);
-    }
-    if (persons.find((person) => person.number === newNumber))
-      alert(`${newNumber} is alredy added to phonebook`);
-    else {
+    } else {
       const newPerson = { name: newName, number: newNumber };
+      axios
+        .post("http://localhost:3003/persons", newPerson)
+        .then((response) => {
+          setPersons(persons.concat(response.data));
 
-      setPersons(persons.concat(newPerson));
-
-      setNewName("");
-      setNewNumber("");
+          setNewName("");
+          setNewNumber("");
+        });
     }
   };
 
