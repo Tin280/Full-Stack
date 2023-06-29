@@ -1,20 +1,19 @@
-//Finish 2.6-2.12
-import axios from "axios";
+//////Finish 2.6-2.13
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonsForm from "./components/PersonsForm";
 import Persons from "./components/Persons";
-
-const App = () => {
+import person from "./services/person";
+function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterQuery, setfilterQuery] = useState("");
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3003/persons").then((response) => {
+    person.getAll().then((initialPersons) => {
       console.log("promise fulfilled");
-      setPersons(response.data);
+      setPersons(initialPersons);
     });
   }, []);
 
@@ -29,14 +28,12 @@ const App = () => {
       alert(`${newName} is already added to phonebook`);
     } else {
       const newPerson = { name: newName, number: newNumber };
-      axios
-        .post("http://localhost:3003/persons", newPerson)
-        .then((response) => {
-          setPersons(persons.concat(response.data));
+      person.create(newPerson).then((addedPerson) => {
+        setPersons(persons.concat(addedPerson));
 
-          setNewName("");
-          setNewNumber("");
-        });
+        setNewName("");
+        setNewNumber("");
+      });
     }
   };
 
@@ -56,6 +53,5 @@ const App = () => {
       <Persons persons={persons} query={filterQuery} />
     </div>
   );
-};
-
+}
 export default App;
