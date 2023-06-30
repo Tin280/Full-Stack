@@ -1,9 +1,9 @@
-//////Finish 2.6-2.14
+//////Finish 2.6-2.15
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonsForm from "./components/PersonsForm";
 import Persons from "./components/Persons";
-import person from "./services/person";
+import personService from "./services/person";
 function App() {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -11,7 +11,7 @@ function App() {
   const [filterQuery, setfilterQuery] = useState("");
   useEffect(() => {
     console.log("effect");
-    person.getAll().then((initialPersons) => {
+    personService.getAll().then((initialPersons) => {
       console.log("promise fulfilled");
       setPersons(initialPersons);
     });
@@ -21,14 +21,31 @@ function App() {
     console.log(event.target.value);
     setValue(event.target.value);
   };
-  const foundPerson = () => {};
+
   const handleAddNewPerson = (event) => {
     event.preventDefault();
-    if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    const newPerson = { name: newName, number: newNumber };
+    const foundPerson = persons.find((person) => person.name === newName);
+    if (foundPerson) {
+      if (
+        window.confirm(
+          `${newName} is already add to phonebook , replace the old number `
+        )
+      ) {
+        personService
+          .update(foundPerson.id, newPerson)
+          .then((returnedPerson) =>
+            setPersons(
+              persons.map((person) =>
+                person.id !== foundPerson.id ? person : returnedPerson
+              )
+            )
+          );
+        setNewName("");
+        setNewNumber("");
+      }
     } else {
-      const newPerson = { name: newName, number: newNumber };
-      person.create(newPerson).then((addedPerson) => {
+      personService.create(newPerson).then((addedPerson) => {
         setPersons(persons.concat(addedPerson));
 
         setNewName("");
@@ -38,7 +55,7 @@ function App() {
   };
   const handleRemovePerson = (id, name) => () => {
     if (window.confirm(`Delete ${name}?`)) {
-      person.remove(id).then((deletedPerson) => {
+      personService.remove(id).then((deletedPerson) => {
         setPersons(
           persons.filter((person) => person.name !== deletedPerson.name)
         );
