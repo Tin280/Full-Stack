@@ -1,4 +1,4 @@
-//////Finish 2.6-2.13
+//////Finish 2.6-2.14
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonsForm from "./components/PersonsForm";
@@ -21,7 +21,7 @@ function App() {
     console.log(event.target.value);
     setValue(event.target.value);
   };
-
+  const foundPerson = () => {};
   const handleAddNewPerson = (event) => {
     event.preventDefault();
     if (persons.find((person) => person.name === newName)) {
@@ -33,6 +33,15 @@ function App() {
 
         setNewName("");
         setNewNumber("");
+      });
+    }
+  };
+  const handleRemovePerson = (id, name) => () => {
+    if (window.confirm(`Delete ${name}?`)) {
+      person.remove(id).then((deletedPerson) => {
+        setPersons(
+          persons.filter((person) => person.name !== deletedPerson.name)
+        );
       });
     }
   };
@@ -50,7 +59,11 @@ function App() {
         handleAddPerson={handleAddNewPerson}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} query={filterQuery} />
+      <Persons
+        persons={persons}
+        query={filterQuery}
+        handleRemovePerson={handleRemovePerson}
+      />
     </div>
   );
 }
