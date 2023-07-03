@@ -1,32 +1,24 @@
-//////Finish 2.6-2.16
 import { useState, useEffect } from "react";
 
 import Filter from "./components/Filter";
-import PersonsForm from "./components/PersonsForm";
+import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Notification from "./components/Notification";
 import personService from "./services/person";
 
-function App() {
+const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [filterQuery, setfilterQuery] = useState("");
+  const [filterQuery, setFilterQuery] = useState("");
   const [status, setStatus] = useState(null);
-  const [notification, setNotification] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    console.log("effect");
-    personService.getAll().then((initialPersons) => {
-      console.log("promise fulfilled");
-      setPersons(initialPersons);
-    });
+    personService.getAll().then((initialPersons) => setPersons(initialPersons));
   }, []);
 
-  const handlechange = (setValue) => (event) => {
-    console.log(event.target.value);
-    setValue(event.target.value);
-  };
+  const handleChange = (setValue) => (e) => setValue(e.target.value);
 
   const handleAddNewPerson = (e) => {
     e.preventDefault();
@@ -49,14 +41,14 @@ function App() {
               )
             );
           })
-          .catch((error) => {
+          .catch((_error) => {
             setStatus("error");
-            setNotification(
+            setMessage(
               `Information of ${foundPerson.name} has already been removed from server`
             );
             setTimeout(() => {
               setStatus(null);
-              setNotification(null);
+              setMessage(null);
             }, 5000);
 
             setPersons(
@@ -69,10 +61,10 @@ function App() {
         setPersons(persons.concat(addedPerson));
 
         setStatus("success");
-        setNotification(`Added ${addedPerson.name}`);
+        setMessage(`Added ${addedPerson.name}`);
         setTimeout(() => {
           setStatus(null);
-          setNotification(null);
+          setMessage(null);
         }, 5000);
 
         setNewName("");
@@ -81,38 +73,25 @@ function App() {
     }
   };
 
-  const handleRemovePerson = (id, name) => {
-    return () => {
-      if (window.confirm(`Delete ${name} ?`)) {
-        personService
-          .remove(id)
-          .then(() => {
-            setPersons(persons.filter((person) => person.name !== name));
-            setNotification(`Removed ${name}`);
-            setNewName("");
-            setNewNumber("");
-          })
-          .catch((error) => {
-            setPersons(persons.filter((n) => n.name !== name));
-            setNotification(`Käyttäjä ${name} on jo poistettu palvelimelta.`);
-          });
-        setTimeout(() => {
-          setNotification(null);
-        }, 10000);
-      }
-    };
+  const handleRemovePerson = (id, name) => () => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService.remove(id).then(() => {
+        setPersons(persons.filter((person) => person.name !== name));
+      });
+    }
   };
+
   return (
     <div>
-      <h2>Phonebook</h2>
-      <Notification message={notification} status={status} />
-      <Filter query={filterQuery} handlechange={handlechange(setfilterQuery)} />
+      <h1>Phonebook</h1>
+      <Notification message={message} status={status} />
+      <Filter query={filterQuery} handleChange={handleChange(setFilterQuery)} />
       <h2>add a new</h2>
-      <PersonsForm
-        newNumber={newNumber}
-        newName={newName}
-        handlechangeName={handlechange(setNewName)}
-        handlechangeNumber={handlechange(setNewNumber)}
+      <PersonForm
+        name={newName}
+        number={newNumber}
+        handleChangeName={handleChange(setNewName)}
+        handleChangeNumber={handleChange(setNewNumber)}
         handleAddPerson={handleAddNewPerson}
       />
       <h2>Numbers</h2>
@@ -123,5 +102,6 @@ function App() {
       />
     </div>
   );
-}
+};
+
 export default App;

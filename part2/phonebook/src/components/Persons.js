@@ -1,7 +1,7 @@
 import Person from "./Person";
 
 const Persons = ({ persons, query, handleRemovePerson }) => (
-  <>
+  <div>
     {persons
       .filter(
         (person) =>
@@ -9,13 +9,13 @@ const Persons = ({ persons, query, handleRemovePerson }) => (
       )
       .map(({ name, number, id }) => (
         <Person
-          key={name}
+          key={id}
           name={name}
           number={number}
           handleRemovePerson={handleRemovePerson(id, name)}
         />
       ))}
-  </>
+  </div>
 );
 
 export default Persons;
