@@ -5,10 +5,7 @@ const app = express();
 app.use(express.json());
 
 morgan.token("body", (req, res) => {
-  if (req.method === "POST") {
-    return JSON.stringify(req.body);
-  }
-  return "";
+  return req.method === "POST" ? JSON.stringify(req.body) : "";
 });
 
 app.use(
