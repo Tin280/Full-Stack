@@ -94,7 +94,9 @@ function App() {
           })
           .catch((error) => {
             setPersons(persons.filter((n) => n.name !== name));
-            setNotification(`Käyttäjä ${name} on jo poistettu palvelimelta.`);
+            setNotification(
+              `User ${name} has already been removed from the server.`
+            );
           });
         setTimeout(() => {
           setNotification(null);
