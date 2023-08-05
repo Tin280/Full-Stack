@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for fullstackopen2023-phonebook on 2023-07-20T22:48:29+03:00
+# fly.toml app configuration file generated for fullstackopen2023-phonebook on 2023-08-05T12:45:57+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -6,8 +6,7 @@
 app = "fullstackopen2023-phonebook"
 primary_region = "arn"
 
-[env]
-  PORT = "3001"
+[build]
 
 [http_service]
   internal_port = 3001
