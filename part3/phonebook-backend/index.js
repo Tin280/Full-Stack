@@ -11,7 +11,7 @@ app.use(express.json())
 
 app.use(express.static('build'))
 
-morgan.token('body', (req, res) => {
+morgan.token('body', (req) => {
   return req.method === 'POST' ? JSON.stringify(req.body) : ''
 })
 
