@@ -3,18 +3,15 @@ const url = process.env.MONGODB_URI
 mongoose.set('strictQuery', false)
 
 const personSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    minLength: 3,
-  },
+  name: { type: String,minLength: 3, },
   date: { type: Date, default: Date.now },
   number: {
     type: String,
     validate: {
       validator: (i) => {
-        if (i.includes('-')) return /^((\d{3}|\d{2}-\d+))$/.test(i)
+        if (i.includes('-')) return /^((\d{3}|\d{2})-\d+)$/.test(i)
       },
-      vmessage: (props) => `${props.value} is not a valid phone number!`,
+      message: (props) => `${props.value} is not a valid phone number!`,
     },
     minLength: 8,
   },
