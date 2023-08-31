@@ -38,7 +38,7 @@ const authorWithMostLikes = (blogs) => {
     const authorLikes = _.groupBy(blogs, 'author')
     // Tìm tác giả có nhiều lượt thích nhất bằng hàm _.maxBy
     const authorWithMost = _.maxBy(_.keys(authorLikes), author => {
-        // Tính tổng số lượt thích cho mỗi tác giả bằng hàm _.sumBy
+    // Tính tổng số lượt thích cho mỗi tác giả bằng hàm _.sumBy
         const totalLikes = _.sumBy(authorLikes[author], 'likes')
         return totalLikes
     })

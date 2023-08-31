@@ -256,7 +256,7 @@ describe('mostLikes', () => {
             __v: 0
         }
     ]
-    test.only('the author, whose blog posts have the largest amount of likes', () => {
+    test('the author, whose blog posts have the largest amount of likes', () => {
         const result = listHelper.authorWithMostLikes(blogs)
         expect(result).toEqual({
             author: 'Edsger W. Dijkstra',
