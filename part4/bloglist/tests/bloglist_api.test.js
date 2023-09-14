@@ -4,6 +4,8 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/Blog')
 const helper = require('./blogtest_helper')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -164,6 +166,55 @@ describe('Test put', () => {
     },100000)
 
 })
+
+describe.only('when there is initially one user in db', () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHash = await  bcrypt.hash('secret', 10)
+        const user = new User({ username: 'root', passwordHash })
+        await user.save()
+
+    })
+    test('success to create a new username ', async () => {
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            username: 'DavidT',
+            name: 'TT',
+            password: '113'
+        }
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length +1 )
+
+        const usernames = usersAtEnd.map((u) => u.username)
+        expect(usernames).toContain(newUser.username)
+    },100000)
+
+    test.only('Invalid username will not save and create',async() =>{
+        const usersAtStart = await helper.usersInDb()
+        const newUser = {
+            username: 'root',
+            name: 'TT',
+            password: '123'
+        }
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+
+
+        expect(result.body.error).toContain('expected `username` to be unique')
+
+        const usersAtEnd =await helper.usersInDb()
+        expect(usersAtEnd).toEqual(usersAtStart)
+    },100000)
+},100000)
 
 afterAll(async () => {
     await mongoose.connection.close()
