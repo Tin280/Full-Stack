@@ -1,0 +1,30 @@
+@baseurl = http://localhost:3003
+
+### GET endpoint /
+GET {{baseurl}}/api/blogs
+
+### GET endpoint /api/
+GET {{baseurl}}/api/users
+
+### POST endpoint /api/users
+POST {{baseurl}}/api/users
+Content-Type: application/json
+
+{
+    "username":"Tinkhu1",
+    "name":"hehehe",
+    "password":"12345"
+}
+
+### POST endpoint /api/blogs
+POST {{baseurl}}/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Example Blog Post",
+    "author": "John Doe",
+    "url": "https://example.com/blogpost",
+    "likes": 22,
+    "user": "65436ec1fe2121fc71cf17a6" 
+}
+
