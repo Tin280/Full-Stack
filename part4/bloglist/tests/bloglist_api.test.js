@@ -196,7 +196,7 @@ describe('when there is initially one user in db', () => {
         expect(usernames).toContain(newUser.username)
     },100000)
 
-    test('Invalid username will not save and create',async() =>{
+    test('Invalid username will not save and create',async() => {
         const usersAtStart = await helper.usersInDb()
         const newUser = {
             username: 'root',

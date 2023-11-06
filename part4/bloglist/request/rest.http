@@ -11,20 +11,30 @@ POST {{baseurl}}/api/users
 Content-Type: application/json
 
 {
-    "username":"Tinkhu1",
+    "username":"Tinkhu123",
     "name":"hehehe",
-    "password":"12345"
+    "password":"113"
 }
 
 ### POST endpoint /api/blogs
 POST {{baseurl}}/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRpbmtodTEyMyIsImlkIjoiNjU0OGFjNDQ3MjAxNDYyYTMzYTUwYWQ1IiwiaWF0IjoxNjk5MjY0MTA1LCJleHAiOjE2OTkyNjc3MDV9.iA3iiD3cNR2GuHJAkHrIocZwE3zAzvBu4L9KGPWrXz8
 
 {
     "title": "Example Blog Post",
     "author": "John Doe",
     "url": "https://example.com/blogpost",
-    "likes": 22,
+    "likes": 2308,
     "user": "65436ec1fe2121fc71cf17a6" 
 }
 
+###
+POST {{baseurl}}/api/login
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW
+
+{
+    "username":"Tinkhu123",
+    "password":"113"
+}
