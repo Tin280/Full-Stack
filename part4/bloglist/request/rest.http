@@ -11,15 +11,15 @@ POST {{baseurl}}/api/users
 Content-Type: application/json
 
 {
-    "username":"Tinkhu123",
+    "username":"Tink",
     "name":"hehehe",
-    "password":"113"
+    "password":"Tintin"
 }
 
 ### POST endpoint /api/blogs
 POST {{baseurl}}/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRpbmtodTEyMyIsImlkIjoiNjU0OGFjNDQ3MjAxNDYyYTMzYTUwYWQ1IiwiaWF0IjoxNjk5MjY0MTA1LCJleHAiOjE2OTkyNjc3MDV9.iA3iiD3cNR2GuHJAkHrIocZwE3zAzvBu4L9KGPWrXz8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRpbmtodTEyMzQiLCJpZCI6IjY1NGEzOTQ4ZTViYzFhZDg0Y2IwNDVhMiIsImlhdCI6MTY5OTM2MzE2NywiZXhwIjoxNjk5MzY2NzY3fQ.bLozXkJTYgssA_o4M0b9e2s5OdmgKwZTfCiLtztpjtE
 
 {
     "title": "Example Blog Post",
@@ -35,6 +35,6 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW
 
 {
-    "username":"Tinkhu123",
+    "username":"Tinkhu1234",
     "password":"113"
 }
