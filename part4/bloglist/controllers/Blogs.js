@@ -1,16 +1,9 @@
 const BlogsRouter = require('express').Router()
 const Blog = require('../models/Blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-const { tokenExtractor } = require('../utils/middleware')
 
-// const getTokenFrom = request => {
-//     const authorization = request.get('authorization')
-//     if (authorization && authorization.startsWith('Bearer ')) {
-//         return authorization.replace('Bearer ', '')
-//     }
-//     return null
-// }
+
+const { userExtractor, tokenExtractor } = require('../utils/middleware')
+
 
 BlogsRouter.get('/',async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 })
@@ -18,14 +11,11 @@ BlogsRouter.get('/',async (request, response) => {
 
 })
 
-BlogsRouter.post('/',tokenExtractor,async (request, response) => {
+BlogsRouter.post('/',tokenExtractor,userExtractor,async (request, response) => {
     const body = request.body
-    const decodeToken = jwt.verify(request.body.token, process.env.SECRET)
-    if (!decodeToken.id) {
-        return response.status(401).json( { error: 'token invalid' })
-    }
+    const user = request.body.user
 
-    const user = await User.findById(decodeToken.id)
+
     // console.log('hehe',user)
     const blog = new Blog({
         title: body.title,
@@ -42,9 +32,18 @@ BlogsRouter.post('/',tokenExtractor,async (request, response) => {
     response.status(201).json(result)
 })
 
-BlogsRouter.delete('/:id', async (request,response) => {
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
+BlogsRouter.delete('/:id',tokenExtractor,userExtractor, async (request,response) => {
+    const user = request.body.user
+    const blog = await Blog.findById(request.params.id)
+    // console.log(blog)
+    if(blog.user.toString() === user._id.toString()) {
+        await Blog.findByIdAndRemove(request.params.id)
+        response.status(204).end()
+    }
+    else {
+        response.status(404)
+    }
+
 })
 
 BlogsRouter.put('/:id', async (request, response) => {
@@ -57,3 +56,5 @@ BlogsRouter.put('/:id', async (request, response) => {
 })
 
 module.exports = BlogsRouter
+
+//xong 4.21

@@ -6,6 +6,8 @@ const Blog = require('../models/Blog')
 const helper = require('./blogtest_helper')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
+const config = require('../utils/config')
+const jwt = require('jsonwebtoken')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -13,7 +15,7 @@ beforeEach(async () => {
         let blogObject = new Blog(blog)
         await blogObject.save()
     }
-})
+},100000)
 //4.8
 
 describe('Get the blogs and check content', () => {
@@ -45,7 +47,18 @@ describe('Check identify', () => {
 //4.10
 
 describe('Test Post request', () => {
+    //Update for 4.23
+    let token = null
+    beforeAll(async () => {
+        await User.deleteMany({})
 
+        const passwordHash = await  bcrypt.hash('secret', 10)
+        const user = new User({ username: 'root', passwordHash })
+        await user.save()
+        const userForToken = { username: user.username, id: user.id }
+        console.log(userForToken)
+        return (token = jwt.sign(userForToken, config.SECRET))
+    })
     test('Successfully creates a new blog post', async () => {
         const newBlog = {
             title: 'Why Every Developer should Learn Docker in 2023',
@@ -55,6 +68,7 @@ describe('Test Post request', () => {
         }
         await api
             .post('/api/blogs')
+            .set('Authorization',`bearer ${token}` )
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -65,7 +79,22 @@ describe('Test Post request', () => {
             'Why Every Developer should Learn Docker in 2023'
         )
     },100000)
+    test('Adding fail check sure status 401', async () => {
+        const newBlog = {
+            title: 'Why Every Developer should Learn Docker in 2023',
+            author: 'javinpaul',
+            url: 'https://dev.to/javinpaul/why-every-developer-should-learn-docker-in-2022-2ndi',
+            likes: '103',
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(401)
+    },100000)
 })
+
+
+
 
 
 //4.11
