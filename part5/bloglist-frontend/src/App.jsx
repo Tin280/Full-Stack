@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import loginService from './services/login'
 import blogService from './services/blogs'
-import Notification from './components/Notification'
-
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -65,7 +64,8 @@ const App = () => {
       author: author,
       url: url
     }
-    await blogService.create(newblog)
+    const createdBlog = await blogService.create(newblog)
+    setBlogs([...blogs, createdBlog]);
     setNotification(`a new blog ${title} by ${author} added`)
     setTimeout(() => {
       setNotification(null)
@@ -77,71 +77,48 @@ const App = () => {
     setUrl('')
   }
 
-  if (user === null) {
-    return (
-      <div>
-        <Notification message={errorMessage} classname='error' />
-        <h1>log in to application</h1>
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    )
-  }
+
+
+
+  const blogForm = () => (
+    <BlogForm
+      notification={notification}
+      user={user}
+      handleLogout={handleLogout}
+      title={title}
+      setTitle={setTitle}
+      author={author}
+      setAuthor={setAuthor}
+      url={url}
+      setUrl={setUrl}
+      handleCreate={handleCreate}
+      blogs={blogs}
+    />
+  )
+
+  const loginForm = () => (
+
+    <LoginForm
+      errorMessage={errorMessage}
+      handleLogin={handleLogin}
+      username={username}
+      setUsername={setUsername}
+      password={password}
+      setPassword={setPassword}
+    />
+  )
   return (
     <div>
-      <h1>blogs</h1>
-      <Notification message={notification} classname='notification' />
-      {user.username} logged in
-      <button onClick={handleLogout}>logout</button>
-      <br />
-      <br />
-      <h1>create new</h1>
-      title:
-      <input
-        type='text'
-        value={title}
-        name='title'
-        onChange={({ target }) => setTitle(target.value)}
-      /><br />
-      author:
-      <input
-        type='text'
-        value={author}
-        name='author'
-        onChange={({ target }) => setAuthor(target.value)}
-      /><br />
-      url:
-      <input
-        type='text'
-        value={url}
-        name='url'
-        onChange={({ target }) => setUrl(target.value)}
-      /><br />
-      <button onClick={handleCreate}>create</button>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      {user === null ? (
+        loginForm()
+      ) :
+        blogForm()
+      }
+      {/* {loginForm()} */}
     </div>
   )
+
+
 }
 
 export default App
