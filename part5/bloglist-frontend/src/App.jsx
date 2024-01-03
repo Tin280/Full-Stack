@@ -6,6 +6,8 @@ import BlogForm from './components/BlogForm'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -81,7 +83,7 @@ const App = () => {
     }
     BlogFormRef.current.toggleVisibility()
     const createdBlog = await blogService.create(newblog)
-    setBlogs([...blogs, createdBlog]);
+    setBlogs([...blogs, createdBlog])
     setNotification(`a new blog ${title} by ${author} added`)
     setTimeout(() => {
       setNotification(null)
@@ -95,7 +97,7 @@ const App = () => {
   const handleKeyPress = (event) => {
     event.preventDefault()
     if (event.key === 'Enter') {
-      handleLogin(event);
+      handleLogin(event)
 
     }
   }
@@ -109,7 +111,7 @@ const App = () => {
       likes: newBlog.likes,
       user: newBlog.user.id, // Use only the user ID
       id: newBlog.id,
-    };
+    }
     await blogService.update(updatedBlog)
     const newBlogs = await blogService.getAll()
     setBlogs(newBlogs)
@@ -158,7 +160,7 @@ const App = () => {
         )}
       </div>
     </div>
-  );
+  )
 
   const loginForm = () => (
 
@@ -171,7 +173,9 @@ const App = () => {
       setPassword={setPassword}
       handleCancel={handleCancel}
     />
+
   )
+
   return (
     <div>
       {user === null ? (
@@ -184,5 +188,6 @@ const App = () => {
 
 
 }
+
 
 export default App
