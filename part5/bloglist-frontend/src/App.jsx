@@ -156,7 +156,7 @@ const App = () => {
           return -(a.likes - b.likes)
         }).map(blog =>
 
-          <Blog key={blog.id} blog={blog} updateBlog={updateBloglikes} deletebBlog={deletebBlog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBloglikes} deletebBlog={deletebBlog} user={user} />
         )}
       </div>
     </div>
