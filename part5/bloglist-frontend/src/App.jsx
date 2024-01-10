@@ -14,16 +14,13 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [like, setLike] = useState('')
   const [notification, setNotification] = useState('')
+  const [refreshBlog, setRefreshBlog] = useState(false)
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
-  }, [])
+  }, [refreshBlog])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
@@ -61,11 +58,13 @@ const App = () => {
 
   }
 
+
   const handleCancel = (event) => {
     event.preventDefault()
     setUsername('')
     setPassword('')
   }
+
 
   const handleLogout = async (event) => {
     event.preventDefault()
@@ -73,27 +72,22 @@ const App = () => {
     // window.localStorage.removeItem('loggedBlogappUser')
     window.localStorage.clear()
   }
+
+
   // Handle create
-  const handleCreate = async (event) => {
-    event.preventDefault()
-    const newblog = {
-      title: title,
-      author: author,
-      url: url
+  const handleCreateBlog = async (newBlog) => {
+    try {
+      BlogFormRef.current.toggleVisibility()
+      const createdBlog = await blogService.create(newBlog)
+      await setBlogs([...blogs, createdBlog])
+      setRefreshBlog(!refreshBlog)
     }
-    BlogFormRef.current.toggleVisibility()
-    const createdBlog = await blogService.create(newblog)
-    setBlogs([...blogs, createdBlog])
-    setNotification(`a new blog ${title} by ${author} added`)
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
-
-
-    setAuthor('')
-    setTitle('')
-    setUrl('')
+    catch (exception) {
+      console.log(exception)
+    }
   }
+
+
   const handleKeyPress = (event) => {
     event.preventDefault()
     if (event.key === 'Enter') {
@@ -101,6 +95,7 @@ const App = () => {
 
     }
   }
+
 
   const updateBloglikes = async (newBlog) => {
 
@@ -113,15 +108,13 @@ const App = () => {
       id: newBlog.id,
     }
     await blogService.update(updatedBlog)
-    const newBlogs = await blogService.getAll()
-    setBlogs(newBlogs)
+    setRefreshBlog(!refreshBlog)
   }
 
   const deletebBlog = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       await blogService.deleteBlog(blog)
-      const newBlogs = await blogService.getAll()
-      setBlogs(newBlogs)
+      setRefreshBlog(!refreshBlog)
     }
   }
 
@@ -142,13 +135,8 @@ const App = () => {
       <div>
         <Togglable buttonLabel="create new blog" ref={BlogFormRef}>
           <BlogForm
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
-            handleCreate={handleCreate}
+            handleCreateBlog={handleCreateBlog}
+            setNotification={setNotification}
           />
         </Togglable>
         <br />
