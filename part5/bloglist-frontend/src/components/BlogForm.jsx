@@ -56,7 +56,7 @@ const BlogForm = ({ handleCreateBlog, setNotification }) => {
           id='url'
           placeholder="write url here"
         /><br />
-        <button type='submit'>create</button>
+        <button id='createblog' type='submit'>create</button>
       </form>
 
     </div>

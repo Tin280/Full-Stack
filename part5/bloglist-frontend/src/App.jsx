@@ -128,8 +128,8 @@ const App = () => {
         {notification && <Notification message={notification} classname='notification' />}
       </div>
 
-      {user.username} logged in
-      <button onClick={handleLogout}>logout</button>
+      {user.name} logged in
+      <button id='logout' onClick={handleLogout}>logout</button>
       <br />
       <br />
       <div>
