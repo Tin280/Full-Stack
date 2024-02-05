@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux'
-import anecdoteReducer from './anecdoteReducer'
+import anecdoteSlice from './anecdoteReducer'
 // import notificationReducer from './notificationReducer'
 import { createStore } from 'redux'
-import filterReducer from './filterReducer'
+import filterSlice from './filterReducer'
+import notificationSlice from './notificationReducer'
+// import thunk from 'redux-thunk'
 
 const reducer = combineReducers({
-    anecdotes: anecdoteReducer,
-    filters: filterReducer
+    anecdotes: anecdoteSlice,
+    filters: filterSlice,
+    notifications: notificationSlice,
 })
 
 

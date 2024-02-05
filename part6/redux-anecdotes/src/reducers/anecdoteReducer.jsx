@@ -1,3 +1,4 @@
+import { createSlice } from "@reduxjs/toolkit"
 /* eslint-disable no-case-declarations */
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -20,44 +21,68 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const anecdoteReducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  switch (action.type) {
-    case "VOTE":
-      const id = action.id
+// const anecdoteSlice = (state = initialState, action) => {
+//   console.log('state now: ', state)
+//   console.log('action', action)
+//   switch (action.type) {
+//     case "voteAnecdote":
+//       const id = action.id
+//       const increaseVote = state.find((a) => a.id === id)
+//       const changeVote = { ...increaseVote, votes: increaseVote.votes + 1 }
+//       const newState = state.map((a) => (a.id === id ? changeVote : a))
+//       return newState.sort((a, b) => b.votes - a.votes)
+
+//     case "addAnecdote":
+//       return [...state, action.payload]
+//     default:
+//       return state
+//   }
+
+// }
+
+const anecdoteSlice = createSlice({
+  name: 'anecdote',
+  initialState,
+  reducers: {
+
+    voteAnecdote(state, action) {
+      console.log('state now: ', state)
+      console.log('action', action)
+      const id = action.payload.id
       const increaseVote = state.find((a) => a.id === id)
       const changeVote = { ...increaseVote, votes: increaseVote.votes + 1 }
       const newState = state.map((a) => (a.id === id ? changeVote : a))
       return newState.sort((a, b) => b.votes - a.votes)
-
-    case "addAnecdote":
+    },
+    addAnecdote(state, action) {
+      console.log('state now: ', state)
+      console.log('action', action)
       return [...state, action.payload]
-    default:
-      return state
-  }
 
-}
+    }
+
+  },
+})
+
+export const { voteAnecdote, addAnecdote } = anecdoteSlice.actions
+
 
 export const create = (content) => {
-  return {
-    type: 'addAnecdote',
-    payload: {
-      content,
-      id: getId(),
-      votes: 0
-    }
-  }
+  return addAnecdote({
+    content,
+    id: getId(),
+    votes: 0
+
+  })
 }
 
 
 export const vote = (id) => {
-  return {
-
-    type: "VOTE",
-    id,
+  return voteAnecdote({
+    type: "voteAnecdote",
+    id
   }
-
+  )
 }
 
-export default anecdoteReducer 
+export default anecdoteSlice.reducer
