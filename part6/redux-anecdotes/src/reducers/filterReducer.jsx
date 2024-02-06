@@ -9,7 +9,8 @@ const filterSlice = createSlice({
     initialState,
     reducers: {
         filterAnecdote(state, action) {
-            return action.payload
+            // console.log(action)
+            return action.payload.toLowerCase()
         }
     }
 })
